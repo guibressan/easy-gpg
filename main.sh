@@ -2,9 +2,9 @@
 ####################
 set -e
 ####################
-readonly CFG_FILE_PATH=/tmp/easygpgcfg
-readonly REL_DIR="$(dirname ${0})"
+readonly CFG_FILE_PATH=/tmp/easygpgcfg readonly REL_DIR="$(dirname ${0})"
 readonly DATA_PATH="${REL_DIR}/data"
+readonly VERSION="v0.1.0"
 ####################
 mkdirs() {
   if ! [ -e "${DATA_PATH}" ]; then 
@@ -94,6 +94,9 @@ fi
   printf "Decrypting file: ${ciphertext_path}\nPlaintext should be stored at ${plaintext_target}\n"
   gpg -d --output "${plaintext_target}" "${ciphertext_path}"
 }
+print_version(){
+  printf "EasyGPG ${VERSION}\n"
+}
 ####################
 mkdirs
 ####################
@@ -104,5 +107,6 @@ case ${1} in
   import_public_key) imp_pubkey "${2}" ;;
   encrypt_file) encrypt_file "${2}" "${3}" "${4}" ;;
   decrypt_file) decrypt_file ${2} ;;
+  version | -v | --version) print_version ;;
   *) printf 'Usage: < new_identity | delete_identity | export_public_key | import_public_key | encrypt_file | decrypt_file | help >\n' 1>&2; exit 1 ;;
 esac
