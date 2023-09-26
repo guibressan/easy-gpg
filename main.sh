@@ -107,7 +107,7 @@ case ${1} in
   export_public_key) exp_pubkey "${2}" ;;
   import_public_key) imp_pubkey "${2}" ;;
   encrypt_file) encrypt_file "${2}" "${3}" "${4}" ;;
-  decrypt_file) decrypt_file ${2} ;;
+  decrypt_file) decrypt_file "${2}" ;;
   version | -v | --version) print_version ;;
   *) printf 'Usage: < new_identity | delete_identity | export_public_key | import_public_key | encrypt_file | decrypt_file | help >\n' 1>&2; exit 1 ;;
 esac
