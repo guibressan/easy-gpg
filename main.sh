@@ -64,6 +64,22 @@ imp_pubkey(){
   printf "Importing pubkey at ${pubkey_path}\n"
   gpg --import "${pubkey_path}"
 }
+encrypt_file(){
+  local file_name="${1}"
+  local identity_email="${2}"
+  local recipient_email="${3}"
+  if [ -z "${file_name}" ] || [ -z "${identity_email}" ] || [ -z "${recipient_email}" ]; then
+    printf 'Expected parameters: <file_name> <local_identity_email> <recipient_email>\n' 1>&2; return 1
+  fi
+  local plaintext_path="${DATA_PATH}/${file_name}"
+  if ! [ -e ${plaintext_path} ]; then
+    printf "Plaintext file must be at: ${plaintext_path}\n" 1>&2; return 1
+  fi
+
+  local ciphertext_target="${DATA_PATH}/${file_name}.encrypted"
+  printf "Encrypting file at: ${plaintext_path}\nCiphertext at: ${ciphertext_target}\n"
+  gpg -se -u ${identity_email} -r ${recipient_email} --output ${ciphertext_target} ${plaintext_path}
+}
 ####################
 mkdirs
 ####################
@@ -72,11 +88,9 @@ case ${1} in
   delete_identity) del_sec_key "${2}" ;;
   export_public_key) exp_pubkey "${2}" ;;
   import_public_key) imp_pubkey "${2}" ;;
-  *) printf 'Usage: < new_identity | delete_identity | export_public_key | import_public_key | help >\n' 1>&2; exit 1 ;;
+  encrypt_file) encrypt_file "${2}" "${3}" "${4}" ;;
+  *) printf 'Usage: < new_identity | delete_identity | export_public_key | import_public_key | encrypt_file | help >\n' 1>&2; exit 1 ;;
 esac
 
-# Generate key
-# Export public key
-# Import public key
-# Sign public key
-# 
+# encrypt file
+# decrypt file
