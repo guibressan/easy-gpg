@@ -5,7 +5,7 @@ set -e
 readonly CFG_FILE_PATH=/tmp/easygpgcfg 
 readonly REL_DIR="$(dirname ${0})"
 readonly DATA_PATH="${REL_DIR}/data"
-readonly VERSION="v0.1.0"
+readonly VERSION="v0.1.1"
 ####################
 mkdirs() {
   if ! [ -e "${DATA_PATH}" ]; then 
