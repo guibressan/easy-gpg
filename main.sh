@@ -106,6 +106,3 @@ case ${1} in
   decrypt_file) decrypt_file ${2} ;;
   *) printf 'Usage: < new_identity | delete_identity | export_public_key | import_public_key | encrypt_file | decrypt_file | help >\n' 1>&2; exit 1 ;;
 esac
-
-# encrypt file
-# decrypt file
