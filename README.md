@@ -12,6 +12,12 @@
 ### Why?
 * GPG provide lots of options and sometimes it gets confusing, so the idea is provide a simple way to exchange information securely
 
+### Usage
+* Run the script
+```bash
+./main.sh --help
+```
+
 ### Contact
 * g.br3ssan@gmail.com
 
