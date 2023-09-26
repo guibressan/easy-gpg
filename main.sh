@@ -69,7 +69,7 @@ encrypt_file(){
   local identity_email="${2}"
   local recipient_email="${3}"
   if [ -z "${file_name}" ] || [ -z "${identity_email}" ] || [ -z "${recipient_email}" ]; then
-    printf 'Expected parameters: <file_name> <local_identity_email> <recipient_email>\n' 1>&2; return 1
+    printf 'expected parameters: <file_name> <local_identity_email> <recipient_email>\n' 1>&2; return 1
   fi
   local plaintext_path="${DATA_PATH}/${file_name}"
   if ! [ -e ${plaintext_path} ]; then
@@ -80,6 +80,20 @@ encrypt_file(){
   printf "Encrypting file at: ${plaintext_path}\nCiphertext at: ${ciphertext_target}\n"
   gpg -se -u ${identity_email} -r ${recipient_email} --output ${ciphertext_target} ${plaintext_path}
 }
+decrypt_file(){
+  local file_name="${1}"
+  if [ -z "${file_name}" ]; then
+    printf 'expected parameter: <file_name>\n' 1>&2; return 1
+  fi
+  local ciphertext_path="${DATA_PATH}/${file_name}"
+if ! [ -e "${ciphertext_path}" ]; then
+  printf "Ciphertext file must be at: ${ciphertext_path}\n" 1>&2; return 1
+fi
+  
+  local plaintext_target="${DATA_PATH}/${file_name}.plaintext"
+  printf "Decrypting file: ${ciphertext_path}\nPlaintext should be stored at ${plaintext_target}\n"
+  gpg -d --output "${plaintext_target}" "${ciphertext_path}"
+}
 ####################
 mkdirs
 ####################
@@ -89,7 +103,8 @@ case ${1} in
   export_public_key) exp_pubkey "${2}" ;;
   import_public_key) imp_pubkey "${2}" ;;
   encrypt_file) encrypt_file "${2}" "${3}" "${4}" ;;
-  *) printf 'Usage: < new_identity | delete_identity | export_public_key | import_public_key | encrypt_file | help >\n' 1>&2; exit 1 ;;
+  decrypt_file) decrypt_file ${2} ;;
+  *) printf 'Usage: < new_identity | delete_identity | export_public_key | import_public_key | encrypt_file | decrypt_file | help >\n' 1>&2; exit 1 ;;
 esac
 
 # encrypt file
