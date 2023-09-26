@@ -51,6 +51,19 @@ exp_pubkey() {
   gpg --export --armor --output ${DATA_PATH}/"${email}".asc ${email}
   printf "Key exported to: ${DATA_PATH}/"${email}".asc\n"
 }
+imp_pubkey(){
+  local file_name="${1}"
+  if [ -z "${file_name}" ]; then
+    printf 'Expected parameter: <pubkey_file_name>\n' 1>&2; return 1
+  fi
+  local pubkey_path="${DATA_PATH}/${file_name}"
+  if ! [ -e "${pubkey_path}" ]; then
+    printf "Pubkey file must be at the path: ${pubkey_path}\n" 1>&2; return 1
+  fi
+
+  printf "Importing pubkey at ${pubkey_path}\n"
+  gpg --import "${pubkey_path}"
+}
 ####################
 mkdirs
 ####################
@@ -58,7 +71,8 @@ case ${1} in
   new_identity) gen_key "${2}" "${3}" ;;
   delete_identity) del_sec_key "${2}" ;;
   export_public_key) exp_pubkey "${2}" ;;
-  *) printf 'Usage: < new_identity | delete_identity | export_public_key | help >\n' 1>&2; exit 1 ;;
+  import_public_key) imp_pubkey "${2}" ;;
+  *) printf 'Usage: < new_identity | delete_identity | export_public_key | import_public_key | help >\n' 1>&2; exit 1 ;;
 esac
 
 # Generate key
